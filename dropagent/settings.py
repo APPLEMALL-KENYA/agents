@@ -17,7 +17,14 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'fallback-secret-key')
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # Allowed hosts from env or default safe values
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", ".vercel.app,.now.sh,127.0.0.1,localhost").split(",")
+ALLOWED_HOSTS = [
+    ".vercel.app",
+    ".now.sh",
+    "127.0.0.1",
+    "localhost",
+    "agents-production-3109.up.railway.app",
+]
+
 
 # Application definition
 INSTALLED_APPS = [
