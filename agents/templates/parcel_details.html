@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Parcel Details</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-100">
+
+<div class="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+  <h1 class="text-3xl font-bold text-blue-600 mb-6">Parcel Details</h1>
+  <p><strong>Tracking Code:</strong> {{ parcel.tracking_code }}</p>
+  <p><strong>Client:</strong> {{ parcel.client_name }}</p>
+  <p><strong>Agent:</strong> {{ parcel.agent.name }}</p>
+  <p><strong>Status:</strong> {{ parcel.is_received|yesno:"Received,Pending" }}</p>
+  <p><strong>Description:</strong> {{ parcel.description }}</p>
+</div>
+
+</body>
+</html>

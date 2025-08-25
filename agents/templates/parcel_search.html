@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Parcel Search</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-100">
+
+<div class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+  <h1 class="text-3xl font-bold text-blue-600 mb-6">Search Parcel</h1>
+  <form method="GET">
+    <input name="q" class="border px-3 py-2 w-2/3 rounded" placeholder="Enter tracking code..." />
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Search</button>
+  </form>
+
+  {% if parcels %}
+  <table class="min-w-full mt-6 border">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="py-2 px-4">Tracking Code</th>
+        <th class="py-2 px-4">Client</th>
+        <th class="py-2 px-4">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for parcel in parcels %}
+      <tr>
+        <td class="py-2 px-4"><a href="{% url 'agents:parcel_detail' parcel.tracking_code %}" class="text-blue-500">{{ parcel.tracking_code }}</a></td>
+        <td class="py-2 px-4">{{ parcel.client_name }}</td>
+        <td class="py-2 px-4">{{ parcel.is_received|yesno:"Received,Pending" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+
+</body>
+</html>

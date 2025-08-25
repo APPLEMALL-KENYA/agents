@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+
+  <!-- ✅ TailwindCSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+  <div class="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
+    <h2 class="text-2xl font-bold text-center text-orange-600 mb-6">Create an Account 🚀</h2>
+
+    <!-- Registration Form -->
+    <form method="POST" class="space-y-5">
+      {% csrf_token %}
+      {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+            {{ field.label }}
+          </label>
+          {{ field }}
+          {% if field.errors %}
+            <p class="text-red-500 text-xs mt-1">{{ field.errors|striptags }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <!-- Submit -->
+      <button type="submit"
+              class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-lg transition">
+        Register
+      </button>
+    </form>
+
+    <!-- Login Redirect -->
+    <p class="mt-6 text-center text-sm text-gray-600">
+      Already have an account?
+      <a href="{% url 'login' %}" class="text-orange-500 hover:underline font-semibold">Login</a>
+    </p>
+  </div>
+
+  <!-- ✅ Style Django form fields -->
+  <style>
+    input, select, textarea {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      outline: none;
+      font-size: 0.95rem;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #f97316;
+      box-shadow: 0 0 0 2px rgba(249,115,22,0.25);
+    }
+  </style>
+
+</body>
+</html>

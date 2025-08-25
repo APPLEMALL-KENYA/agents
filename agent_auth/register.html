@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Agent Registration</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex justify-center items-center h-screen">
+<div class="w-full max-w-md bg-white p-8 rounded-xl shadow-xl">
+    <h2 class="text-2xl font-bold text-blue-700 mb-6 text-center">Register as Agent</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 mt-4">Register</button>
+    </form>
+    <p class="text-sm mt-4 text-center">Already have an account? <a href="{% url 'agent_auth:login' %}" class="text-blue-600">Login</a></p>
+</div>
+</body>
+</html>

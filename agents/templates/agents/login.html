@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+  <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Agent Login</h2>
+
+    <form method="POST" class="space-y-5">
+      {% csrf_token %}
+
+      <!-- Username or Email -->
+      <div>
+        <label for="id_username" class="block text-sm font-medium text-gray-600">
+          Username or Email
+        </label>
+        <input type="text" name="username" id="id_username"
+               class="mt-1 w-full px-4 py-3 border rounded-lg shadow-sm 
+                      focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none"
+               placeholder="Enter username or email" required>
+        {% if form.username.errors %}
+          <p class="text-red-500 text-xs mt-1">{{ form.username.errors|striptags }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label for="id_password" class="block text-sm font-medium text-gray-600">Password</label>
+        <input type="password" name="password" id="id_password"
+               class="mt-1 w-full px-4 py-3 border rounded-lg shadow-sm 
+                      focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none"
+               placeholder="Enter password" required>
+        {% if form.password.errors %}
+          <p class="text-red-500 text-xs mt-1">{{ form.password.errors|striptags }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Submit -->
+      <button type="submit"
+              class="w-full bg-orange-500 text-white font-semibold py-3 rounded-lg 
+                     hover:bg-orange-600 transition duration-200 shadow-md">
+        Login
+      </button>
+    </form>
+
+    <!-- Extra links -->
+    <p class="mt-6 text-center text-sm text-gray-500">
+      Forgot password?
+      <a href="{% url 'password_reset' %}" class="text-orange-500 hover:underline">Reset here</a>
+    </p>
+
+    <p class="mt-4 text-center text-sm text-gray-500">
+      Not an agent yet? 
+      <a href="{% url 'register' %}" class="text-orange-500 hover:underline">Sign up</a>
+    </p>
+  </div>
+
+</body>
+</html>
+

@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Agents Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100 min-h-screen font-sans">
+
+    <!-- Container -->
+    <div class="max-w-6xl mx-auto mt-10 p-8 bg-white rounded-2xl shadow-2xl border border-gray-200">
+        
+        <!-- Dashboard Header -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <h1 class="text-4xl font-extrabold text-blue-700 mb-6 md:mb-0">
+                Agents Dashboard
+            </h1>
+            <div class="flex space-x-3">
+                <a href="{% url 'agents:shops' %}" class="px-5 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105">
+                    Manage Agents
+                </a>
+                <a href="{% url 'agents:add_parcel' %}" class="px-5 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition duration-300 ease-in-out transform hover:scale-105">
+                    Add Parcel
+                </a>
+                <a href="{% url 'agents:parcel_search' %}" class="px-5 py-2 bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105">
+                    Search Parcel
+                </a>
+                <a href="{% url 'agents:add_parcel' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">➕ Add Parcel</a>
+                <a href="{% url 'agents:parcel_list' %}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">📦 View Parcels</a>
+
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+            
+            <!-- Total Agents -->
+            <div class="bg-gradient-to-br from-green-100 to-green-200 p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                <h2 class="text-lg font-semibold text-gray-800">Total Agents</h2>
+                <p class="text-4xl font-extrabold text-green-700 mt-3">{{ total_agents }}</p>
+            </div>
+
+            <!-- Total Parcels -->
+            <div class="bg-gradient-to-br from-yellow-100 to-yellow-200 p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                <h2 class="text-lg font-semibold text-gray-800">Total Parcels</h2>
+                <p class="text-4xl font-extrabold text-yellow-600 mt-3">{{ total_parcels }}</p>
+            </div>
+
+            <!-- Received Parcels -->
+            <div class="bg-gradient-to-br from-blue-100 to-blue-200 p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                <h2 class="text-lg font-semibold text-gray-800">Received</h2>
+                <p class="text-4xl font-extrabold text-blue-700 mt-3">{{ received_parcels }}</p>
+            </div>
+
+            <!-- Pending Parcels -->
+            <div class="bg-gradient-to-br from-red-100 to-red-200 p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                <h2 class="text-lg font-semibold text-gray-800">Pending</h2>
+                <p class="text-4xl font-extrabold text-red-600 mt-3">{{ pending_parcels }}</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-10 text-center text-gray-600 text-sm">
+            &copy; {{ now|date:"Y" }} Parcel Management System • All Rights Reserved
+        </div>
+    </div>
+</body>
+</html>
