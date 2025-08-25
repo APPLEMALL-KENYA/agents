@@ -7,14 +7,18 @@ from pathlib import Path
 
 # BASE_DIR points to the project root
 BASE_DIR = Path(__file__).resolve().parent.parent
+import os
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0=$ns_by(w)#rr(25n&7)(#9fruaxc^%ewz8o@+_qyonv&3m&@'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'fallback-secret-key')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+import os
+
+ALLOWED_HOSTS = ['.vercel.app', '.now.sh', '127.0.0.1', 'localhost']
+
 
 # Application definition
 INSTALLED_APPS = [
@@ -30,16 +34,19 @@ INSTALLED_APPS = [
     "agent_portal",  # Your app containing AgentUser model
     "agents",        # Main agents app
     "widget_tweaks",
+    
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'dropagent.urls'
@@ -85,11 +92,15 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]  # Ensure this folder exists
+import os
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Default primary key field type
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Optional for collecting static
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
 
 # Custom user model
 AUTH_USER_MODEL = "agent_portal.AgentUser"
@@ -107,5 +118,5 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "lihambomr@gmail.com"
-EMAIL_HOST_PASSWORD = "Eugine12"  # NOT your Gmail password, use an App Password
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
