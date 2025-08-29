@@ -59,19 +59,18 @@ def login_view(request):
             user = form.get_user()
             auth_login(request, user)
             messages.success(request, "Login successful")
-            next_url = request.GET.get("next") or "agents:dashboard"
-            return redirect(next_url)
+
+            # Handle redirect after login
+            next_url = request.GET.get("next")
+            if next_url:
+                return redirect(next_url)
+            return redirect("agents:dashboard")   # make sure you have this named URL
         else:
             messages.error(request, "Wrong credentials. Please try again.")
-            return redirect("agents:login")
+            return redirect("agents:login")       # keep consistent with your namespace
     else:
         form = AuthenticationForm()
     return render(request, "agents/login.html", {"form": form})
-
-
-def logout_view(request):
-    auth_logout(request)
-    return redirect("login")
 
 
 def agent_login(request):

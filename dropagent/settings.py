@@ -1,53 +1,19 @@
 """
 Django settings for dropagent project.
+Local development only – SQLite, no .env, no Docker, no extra servers.
 """
 
-import os
 from pathlib import Path
-import environ
 
-# ------------------------------------------------------
-# Base Directory
-# ------------------------------------------------------
+# Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ------------------------------------------------------
-# Environment Setup
-# ------------------------------------------------------
-env = environ.Env(
-    DEBUG=(bool, False)
-)
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+# SECURITY WARNING: keep the secret key secret in production!
+SECRET_KEY = 'your-very-secure-hardcoded-secret-key'
+DEBUG = True
+ALLOWED_HOSTS = ['*']
 
-# ------------------------------------------------------
-# Security & Environment Config
-# ------------------------------------------------------
-SECRET_KEY = env("SECRET_KEY", default="fallback-secret-key")
-DEBUG = env("DEBUG", default=True)
-
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    ".vercel.app",
-    ".now.sh",
-    "agents-production-3109.up.railway.app",
-    "agents.applemall.co.ke",
-]
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://*.vercel.app",
-    "https://*.now.sh",
-    "https://agents-production-3109.up.railway.app",
-    "https://agents.applemall.co.ke",
-]
-
-SECURE_SSL_REDIRECT = not DEBUG
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
-
-# ------------------------------------------------------
-# Application Definition
-# ------------------------------------------------------
+# Installed apps
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -55,18 +21,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-    # Third-party
-    "widget_tweaks",
-
-    # Custom apps
+    # your apps
     "agents",
     "dropagent",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -80,7 +41,7 @@ ROOT_URLCONF = "dropagent.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "templates"],  # add global templates folder
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -95,9 +56,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "dropagent.wsgi.application"
 
-# ------------------------------------------------------
-# Database (SQLite)
-# ------------------------------------------------------
+# SQLite database only
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -105,9 +64,7 @@ DATABASES = {
     }
 }
 
-# ------------------------------------------------------
-# Password Validation
-# ------------------------------------------------------
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -115,52 +72,32 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# ------------------------------------------------------
 # Internationalization
-# ------------------------------------------------------
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = "UTC"
+TIME_ZONE = "Africa/Nairobi"
 USE_I18N = True
 USE_TZ = True
 
-# ------------------------------------------------------
-# Static Files (CSS, JS, Images)
-# ------------------------------------------------------
+# Static files
 STATIC_URL = "/static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# ------------------------------------------------------
-# Authentication
-# ------------------------------------------------------
-LOGIN_REDIRECT_URL = "dashboard"
-LOGOUT_REDIRECT_URL = "login"
-LOGIN_URL = "login"
+# Media files
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
-# ------------------------------------------------------
-# Email Configuration
-# ------------------------------------------------------
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="lihambomr@gmail.com")
-EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="your-app-password")
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="appleonlinemall33@gmail.com")
+# Default auto field
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# ------------------------------------------------------
-# Logging
-# ------------------------------------------------------
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-        },
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": "INFO",
-    },
-}
+# Local login/logout redirects
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/login/"
+
+# settings.py
+ # redirect all HTTP to HTTPS
+
+
+
+
+

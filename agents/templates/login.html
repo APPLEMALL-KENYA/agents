@@ -82,26 +82,28 @@
     const form = document.getElementById("loginForm");
     const loader = document.getElementById("loaderOverlay");
     const statusText = document.getElementById("loaderStatus");
-
+  
     // Show loader on form submit
     form.addEventListener("submit", () => {
       loader.classList.remove("hidden");
       statusText.textContent = "Authenticating...";
       statusText.classList.remove("text-red-500", "text-green-600");
     });
-
+  
     // Handle Django messages
     {% if messages %}
       window.addEventListener("DOMContentLoaded", () => {
-        loader.classList.remove("hidden");
         {% for message in messages %}
           {% if message.tags == "error" %}
+            loader.classList.remove("hidden");
             statusText.textContent = "❌ Wrong credentials";
             statusText.classList.add("text-red-500");
+            // Hide loader again so form is usable
             setTimeout(() => {
-              window.location.href = "{% url 'agents:login' %}";
-            }, 1500);
+              loader.classList.add("hidden");
+            }, 2000);
           {% elif message.tags == "success" %}
+            loader.classList.remove("hidden");
             statusText.textContent = "✅ Login successful";
             statusText.classList.add("text-green-600");
             setTimeout(() => {
@@ -112,6 +114,8 @@
       });
     {% endif %}
   </script>
+  
+  
 
 </body>
 </html>
