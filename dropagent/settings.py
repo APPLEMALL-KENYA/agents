@@ -97,7 +97,6 @@ LOGOUT_REDIRECT_URL = "/login/"
 # settings.py
 SECURE_SSL_REDIRECT = True  # redirect all HTTP to HTTPS
 
-SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 
