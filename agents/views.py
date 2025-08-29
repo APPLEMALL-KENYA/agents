@@ -276,3 +276,17 @@ def dashboard_view(request):
 
     return render(request, 'agents/dashboard.html', context)
 
+from django.shortcuts import render
+from .models import Shop, Agent, Parcel
+
+def shop_list(request):
+    shops = Shop.objects.all()
+    return render(request, 'agents/shop_list.html', {'shops': shops})
+
+def agent_list(request):
+    agents = Agent.objects.all()
+    return render(request, 'agents/agent_list.html', {'agents': agents})
+
+def parcel_list(request):
+    parcels = Parcel.objects.all()
+    return render(request, 'agents/parcel_list.html', {'parcels': parcels})
