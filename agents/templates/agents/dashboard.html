@@ -138,8 +138,28 @@
           {% for parcel in parcels %}
           <tr class="hover:bg-gray-50">
             <td class="border px-4 py-2">{{ parcel.tracking_code }}</td>
-            <td class="border px-4 py-2">{{ parcel.shop.name if parcel.shop }}</td>
-            <td class="border px-4 py-2">{{ parcel.agent.name if parcel.agent }}</td>
+            <td class="border px-4 py-2">
+                {% if parcel.shop %}
+                  {{ parcel.shop.name }}
+                {% else %}
+                  N/A
+                {% endif %}
+              </td>
+              
+              <td class="border px-4 py-2">
+                {% if parcel.agent %}
+                  {{ parcel.agent.name }}
+                {% else %}
+                  N/A
+                {% endif %}
+              </td>              
+              <td class="border px-4 py-2">
+                {% if parcel.agent %}
+                  {{ parcel.agent.name }}
+                {% else %}
+                  N/A
+                {% endif %}
+              </td>
             <td class="border px-4 py-2">{{ parcel.sender_name }}</td>
             <td class="border px-4 py-2">{{ parcel.receiver_name }}</td>
             <td class="border px-4 py-2">{{ parcel.receiver_phone }}</td>
