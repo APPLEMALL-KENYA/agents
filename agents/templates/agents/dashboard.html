@@ -1,86 +1,162 @@
-Got it! You want to **add an “Add Agent” option** to your dashboard header alongside the other buttons. Here’s the updated **mobile-friendly dashboard template** with the new button included:
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Applemall</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
 
-```django
-{% extends "agents/base.html" %}
-
-{% block title %}Dashboard{% endblock %}
-
-{% block content %}
-<!-- Dashboard Header -->
-<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-700 mb-4 md:mb-0">
-        Agents Dashboard
-    </h1>
-    <div class="flex flex-wrap gap-2 md:gap-3">
-        <a href="{% url 'agents:shops' %}" class="px-4 py-2 sm:px-5 sm:py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base">
-            Manage Agents
-        </a>
-        <a href="{% url 'agents:add_agent' %}" class="px-4 py-2 sm:px-5 sm:py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base">
-            Add Agent
-        </a>
-        <a href="{% url 'agents:add_parcel' %}" class="px-4 py-2 sm:px-5 sm:py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base">
-            Add Parcel
-        </a>
-        <a href="{% url 'agents:parcel_search' %}" class="px-4 py-2 sm:px-5 sm:py-2 bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base">
-            Search Parcel
-        </a>
-        <a href="{% url 'agents:parcel_list' %}" class="px-4 py-2 sm:px-4 sm:py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 text-sm sm:text-base">
-            📦 View Parcels
-        </a>
+<!-- Header -->
+<header class="bg-yellow-400 text-white p-4 shadow">
+  <div class="container mx-auto flex justify-between items-center">
+    <h1 class="text-xl font-bold">Dashboard</h1>
+    <div>
+      <span class="mr-4">Hello, {{ request.user.username }}</span>
+      <a href="{% url 'logout' %}" class="bg-white text-yellow-500 px-3 py-1 rounded hover:bg-gray-100">Logout</a>
     </div>
+  </div>
+</header>
+
+<!-- Main Container -->
+<div class="container mx-auto mt-6 grid grid-cols-1 md:grid-cols-4 gap-6">
+
+  <!-- Cards -->
+  <div class="bg-white shadow rounded p-4">
+    <h2 class="font-bold text-lg">Total Shops</h2>
+    <p class="text-2xl mt-2">{{ shops.count }}</p>
+  </div>
+  <div class="bg-white shadow rounded p-4">
+    <h2 class="font-bold text-lg">Total Agents</h2>
+    <p class="text-2xl mt-2">{{ agents.count }}</p>
+  </div>
+  <div class="bg-white shadow rounded p-4">
+    <h2 class="font-bold text-lg">Total Parcels</h2>
+    <p class="text-2xl mt-2">{{ parcels.count }}</p>
+  </div>
+  <div class="bg-white shadow rounded p-4">
+    <h2 class="font-bold text-lg">Pending Parcels</h2>
+    <p class="text-2xl mt-2">{{ pending_parcels.count }}</p>
+  </div>
 </div>
 
-<!-- Stats Cards -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-6 mt-6">
-    <!-- Total Agents -->
-    <div class="bg-gradient-to-br from-green-100 to-green-200 p-4 sm:p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
-        <h2 class="text-md sm:text-lg font-semibold text-gray-800">Total Agents</h2>
-        <p class="text-3xl sm:text-4xl font-extrabold text-green-700 mt-2 sm:mt-3">{{ total_agents }}</p>
-    </div>
+<!-- Listings -->
+<div class="container mx-auto mt-6 space-y-6">
 
-    <!-- Total Parcels -->
-    <div class="bg-gradient-to-br from-yellow-100 to-yellow-200 p-4 sm:p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
-        <h2 class="text-md sm:text-lg font-semibold text-gray-800">Total Parcels</h2>
-        <p class="text-3xl sm:text-4xl font-extrabold text-yellow-600 mt-2 sm:mt-3">{{ total_parcels }}</p>
+  <!-- Shops Table -->
+  <section class="bg-white shadow rounded p-4">
+    <h2 class="text-xl font-bold mb-4">Shops</h2>
+    <input type="text" placeholder="Search shops..." class="border px-3 py-2 rounded w-full mb-3" id="shopSearch">
+    <div class="overflow-x-auto">
+      <table class="w-full table-auto border-collapse">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border px-4 py-2">ID</th>
+            <th class="border px-4 py-2">Name</th>
+            <th class="border px-4 py-2">Location</th>
+            <th class="border px-4 py-2">Phone</th>
+            <th class="border px-4 py-2">Email</th>
+            <th class="border px-4 py-2">Created At</th>
+            <th class="border px-4 py-2">Updated At</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for shop in shops %}
+          <tr class="hover:bg-gray-50">
+            <td class="border px-4 py-2">{{ shop.id }}</td>
+            <td class="border px-4 py-2">{{ shop.name }}</td>
+            <td class="border px-4 py-2">{{ shop.location }}</td>
+            <td class="border px-4 py-2">{{ shop.phone }}</td>
+            <td class="border px-4 py-2">{{ shop.email }}</td>
+            <td class="border px-4 py-2">{{ shop.created_at|date:"Y-m-d H:i" }}</td>
+            <td class="border px-4 py-2">{{ shop.updated_at|date:"Y-m-d H:i" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="7" class="text-center py-4">No shops found</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </section>
 
-    <!-- Received -->
-    <div class="bg-gradient-to-br from-blue-100 to-blue-200 p-4 sm:p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
-        <h2 class="text-md sm:text-lg font-semibold text-gray-800">Received</h2>
-        <p class="text-3xl sm:text-4xl font-extrabold text-blue-700 mt-2 sm:mt-3">{{ received_parcels }}</p>
+  <!-- Agents Table -->
+  <section class="bg-white shadow rounded p-4">
+    <h2 class="text-xl font-bold mb-4">Agents</h2>
+    <input type="text" placeholder="Search agents..." class="border px-3 py-2 rounded w-full mb-3" id="agentSearch">
+    <div class="overflow-x-auto">
+      <table class="w-full table-auto border-collapse">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border px-4 py-2">Name</th>
+            <th class="border px-4 py-2">Phone</th>
+            <th class="border px-4 py-2">Email</th>
+            <th class="border px-4 py-2">Ref Code</th>
+            <th class="border px-4 py-2">Is Shop</th>
+            <th class="border px-4 py-2">Commission</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for agent in agents %}
+          <tr class="hover:bg-gray-50">
+            <td class="border px-4 py-2">{{ agent.name }}</td>
+            <td class="border px-4 py-2">{{ agent.phone }}</td>
+            <td class="border px-4 py-2">{{ agent.email }}</td>
+            <td class="border px-4 py-2">{{ agent.reference_code }}</td>
+            <td class="border px-4 py-2">{{ agent.is_shop }}</td>
+            <td class="border px-4 py-2">{{ agent.commission_balance }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6" class="text-center py-4">No agents found</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </section>
 
-    <!-- Pending -->
-    <div class="bg-gradient-to-br from-red-100 to-red-200 p-4 sm:p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
-        <h2 class="text-md sm:text-lg font-semibold text-gray-800">Pending</h2>
-        <p class="text-3xl sm:text-4xl font-extrabold text-red-600 mt-2 sm:mt-3">{{ pending_parcels }}</p>
+  <!-- Parcels Table -->
+  <section class="bg-white shadow rounded p-4">
+    <h2 class="text-xl font-bold mb-4">Parcels</h2>
+    <input type="text" placeholder="Search parcels..." class="border px-3 py-2 rounded w-full mb-3" id="parcelSearch">
+    <div class="overflow-x-auto">
+      <table class="w-full table-auto border-collapse">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border px-4 py-2">Tracking Code</th>
+            <th class="border px-4 py-2">Shop</th>
+            <th class="border px-4 py-2">Agent</th>
+            <th class="border px-4 py-2">Sender</th>
+            <th class="border px-4 py-2">Receiver</th>
+            <th class="border px-4 py-2">Receiver Phone</th>
+            <th class="border px-4 py-2">Status</th>
+            <th class="border px-4 py-2">Created At</th>
+            <th class="border px-4 py-2">Updated At</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for parcel in parcels %}
+          <tr class="hover:bg-gray-50">
+            <td class="border px-4 py-2">{{ parcel.tracking_code }}</td>
+            <td class="border px-4 py-2">{{ parcel.shop.name if parcel.shop }}</td>
+            <td class="border px-4 py-2">{{ parcel.agent.name if parcel.agent }}</td>
+            <td class="border px-4 py-2">{{ parcel.sender_name }}</td>
+            <td class="border px-4 py-2">{{ parcel.receiver_name }}</td>
+            <td class="border px-4 py-2">{{ parcel.receiver_phone }}</td>
+            <td class="border px-4 py-2">{{ parcel.status }}</td>
+            <td class="border px-4 py-2">{{ parcel.created_at|date:"Y-m-d H:i" }}</td>
+            <td class="border px-4 py-2">{{ parcel.updated_at|date:"Y-m-d H:i" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="9" class="text-center py-4">No parcels found</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </section>
 
-    <!-- Referred Agents -->
-    <div class="bg-gradient-to-br from-purple-100 to-purple-200 p-4 sm:p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
-        <h2 class="text-md sm:text-lg font-semibold text-gray-800">Referred Agents</h2>
-        <p class="text-3xl sm:text-4xl font-extrabold text-purple-700 mt-2 sm:mt-3">{{ user.agent.referred_agents.count }}</p>
-    </div>
-
-    <!-- Commission Balance -->
-    <div class="bg-gradient-to-br from-pink-100 to-pink-200 p-4 sm:p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
-        <h2 class="text-md sm:text-lg font-semibold text-gray-800">Commission Balance</h2>
-        <p class="text-3xl sm:text-4xl font-extrabold text-pink-700 mt-2 sm:mt-3">KES {{ user.agent.commission_balance }}</p>
-    </div>
 </div>
-{% endblock %}
-```
 
----
+</body>
+</html>
 
-### ✅ Changes Made:
-
-1. **Added “Add Agent” button** next to “Manage Agents” in the header.
-2. Used a **distinct color (`indigo-600`)** for the new button to differentiate it.
-3. Preserved **mobile responsiveness** (`flex-wrap`, responsive text/padding).
-
----
-
-If you want, I can **also update the `dashboard_view` to only show “Add Agent” button for users who are allowed to add agents** (like admins or shop owners) so regular agents don’t see it.
-
-Do you want me to do that?
