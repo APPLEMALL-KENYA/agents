@@ -240,6 +240,7 @@ def test_email(request):
     )
     return render(request, "emails/sent.html")
 
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import Agent, Parcel
@@ -248,24 +249,30 @@ from .models import Agent, Parcel
 def dashboard_view(request):
     user = request.user
 
-    # Total agents (if user has referred agents)
-    total_agents = Agent.objects.count()  # or filter by some criteria
+    # Total agents (all agents)
+    total_agents = Agent.objects.count()
 
-    # Parcels
+    # Parcels stats
     total_parcels = Parcel.objects.count()
     received_parcels = Parcel.objects.filter(status='received').count()
     pending_parcels = Parcel.objects.filter(status='pending').count()
 
-    # Referred agents & commission balance
-    referred_agents_count = user.agent.referred_agents.count() if hasattr(user, 'agent') else 0
-    commission_balance = user.agent.commission_balance if hasattr(user, 'agent') else 0
+    # Agent-specific info
+    referred_agents_count = 0
+    commission_balance = 0
+
+    if hasattr(user, 'agent'):
+        # Now referred agents come from reverse FK: parent_agent__referred_agents
+        referred_agents_count = user.agent.referred_agents.count()
+        commission_balance = user.agent.commission_balance
 
     context = {
         'total_agents': total_agents,
         'total_parcels': total_parcels,
         'received_parcels': received_parcels,
         'pending_parcels': pending_parcels,
-        'user': user,  # needed in template for user.agent.*
+        'user': user,  # template uses user.agent.*
     }
 
     return render(request, 'agents/dashboard.html', context)
+
