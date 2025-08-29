@@ -239,3 +239,33 @@ def test_email(request):
         context=context
     )
     return render(request, "emails/sent.html")
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Agent, Parcel
+
+@login_required
+def dashboard_view(request):
+    user = request.user
+
+    # Total agents (if user has referred agents)
+    total_agents = Agent.objects.count()  # or filter by some criteria
+
+    # Parcels
+    total_parcels = Parcel.objects.count()
+    received_parcels = Parcel.objects.filter(status='received').count()
+    pending_parcels = Parcel.objects.filter(status='pending').count()
+
+    # Referred agents & commission balance
+    referred_agents_count = user.agent.referred_agents.count() if hasattr(user, 'agent') else 0
+    commission_balance = user.agent.commission_balance if hasattr(user, 'agent') else 0
+
+    context = {
+        'total_agents': total_agents,
+        'total_parcels': total_parcels,
+        'received_parcels': received_parcels,
+        'pending_parcels': pending_parcels,
+        'user': user,  # needed in template for user.agent.*
+    }
+
+    return render(request, 'agents/dashboard.html', context)
