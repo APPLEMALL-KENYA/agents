@@ -4,51 +4,62 @@
 
 {% block content %}
 <!-- Dashboard Header -->
-<div class="flex flex-col md:flex-row md:items-center md:justify-between">
-    <h1 class="text-4xl font-extrabold text-blue-700 mb-6 md:mb-0">
+<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-700 mb-4 md:mb-0">
         Agents Dashboard
     </h1>
-    <div class="flex space-x-3">
-        <a href="{% url 'agents:shops' %}" class="px-5 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105">
+    <div class="flex flex-wrap gap-2 md:gap-3">
+        <a href="{% url 'agents:shops' %}" class="px-4 py-2 sm:px-5 sm:py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base">
             Manage Agents
         </a>
-        <a href="{% url 'agents:add_parcel' %}" class="px-5 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition duration-300 ease-in-out transform hover:scale-105">
+        <a href="{% url 'agents:add_parcel' %}" class="px-4 py-2 sm:px-5 sm:py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base">
             Add Parcel
         </a>
-        <a href="{% url 'agents:parcel_search' %}" class="px-5 py-2 bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105">
+        <a href="{% url 'agents:parcel_search' %}" class="px-4 py-2 sm:px-5 sm:py-2 bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base">
             Search Parcel
         </a>
-        <a href="{% url 'agents:parcel_list' %}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+        <a href="{% url 'agents:parcel_list' %}" class="px-4 py-2 sm:px-4 sm:py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 text-sm sm:text-base">
             📦 View Parcels
         </a>
     </div>
 </div>
 
 <!-- Stats Cards -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 mt-10">
-    <div class="col-span-1 sm:col-span-2 bg-gradient-to-br from-green-100 to-green-200 p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
-        <h2 class="text-lg font-semibold text-gray-800">Total Agents</h2>
-        <p class="text-4xl font-extrabold text-green-700 mt-3">{{ total_agents }}</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-6 mt-6">
+    <!-- Total Agents -->
+    <div class="bg-gradient-to-br from-green-100 to-green-200 p-4 sm:p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
+        <h2 class="text-md sm:text-lg font-semibold text-gray-800">Total Agents</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold text-green-700 mt-2 sm:mt-3">{{ total_agents }}</p>
     </div>
-    <div class="col-span-1 sm:col-span-2 bg-gradient-to-br from-yellow-100 to-yellow-200 p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
-        <h2 class="text-lg font-semibold text-gray-800">Total Parcels</h2>
-        <p class="text-4xl font-extrabold text-yellow-600 mt-3">{{ total_parcels }}</p>
+
+    <!-- Total Parcels -->
+    <div class="bg-gradient-to-br from-yellow-100 to-yellow-200 p-4 sm:p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
+        <h2 class="text-md sm:text-lg font-semibold text-gray-800">Total Parcels</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold text-yellow-600 mt-2 sm:mt-3">{{ total_parcels }}</p>
     </div>
-    <div class="col-span-1 sm:col-span-2 bg-gradient-to-br from-blue-100 to-blue-200 p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
-        <h2 class="text-lg font-semibold text-gray-800">Received</h2>
-        <p class="text-4xl font-extrabold text-blue-700 mt-3">{{ received_parcels }}</p>
+
+    <!-- Received -->
+    <div class="bg-gradient-to-br from-blue-100 to-blue-200 p-4 sm:p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
+        <h2 class="text-md sm:text-lg font-semibold text-gray-800">Received</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold text-blue-700 mt-2 sm:mt-3">{{ received_parcels }}</p>
     </div>
-    <div class="col-span-1 sm:col-span-2 bg-gradient-to-br from-red-100 to-red-200 p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
-        <h2 class="text-lg font-semibold text-gray-800">Pending</h2>
-        <p class="text-4xl font-extrabold text-red-600 mt-3">{{ pending_parcels }}</p>
+
+    <!-- Pending -->
+    <div class="bg-gradient-to-br from-red-100 to-red-200 p-4 sm:p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
+        <h2 class="text-md sm:text-lg font-semibold text-gray-800">Pending</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold text-red-600 mt-2 sm:mt-3">{{ pending_parcels }}</p>
     </div>
-    <div class="col-span-1 sm:col-span-2 bg-gradient-to-br from-purple-100 to-purple-200 p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
-        <h2 class="text-lg font-semibold text-gray-800">Referred Agents</h2>
-        <p class="text-4xl font-extrabold text-purple-700 mt-3">{{ user.agent.referred_agents.count }}</p>
+
+    <!-- Referred Agents -->
+    <div class="bg-gradient-to-br from-purple-100 to-purple-200 p-4 sm:p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
+        <h2 class="text-md sm:text-lg font-semibold text-gray-800">Referred Agents</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold text-purple-700 mt-2 sm:mt-3">{{ user.agent.referred_agents.count }}</p>
     </div>
-    <div class="col-span-1 sm:col-span-2 bg-gradient-to-br from-pink-100 to-pink-200 p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
-        <h2 class="text-lg font-semibold text-gray-800">Commission Balance</h2>
-        <p class="text-4xl font-extrabold text-pink-700 mt-3">KES {{ user.agent.commission_balance }}</p>
+
+    <!-- Commission Balance -->
+    <div class="bg-gradient-to-br from-pink-100 to-pink-200 p-4 sm:p-6 rounded-xl shadow hover:shadow-lg transform hover:scale-105 transition">
+        <h2 class="text-md sm:text-lg font-semibold text-gray-800">Commission Balance</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold text-pink-700 mt-2 sm:mt-3">KES {{ user.agent.commission_balance }}</p>
     </div>
 </div>
 {% endblock %}
