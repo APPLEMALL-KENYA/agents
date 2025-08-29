@@ -1,20 +1,209 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Add Agent</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register as Agent</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-<div class="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
-  <h1 class="text-3xl font-bold text-blue-600 mb-6">Add New Agent</h1>
-  <form method="POST" class="space-y-4">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
-  </form>
-</div>
+  <div class="bg-white p-8 rounded-2xl shadow-md w-full max-w-md relative">
+
+    <!-- App Logo -->
+    <div class="flex justify-center mb-4">
+      <img src="{% static 'logo.png' %}" alt="Applemall Logo" class="w-20 h-20">
+    </div>
+
+    <h1 class="text-3xl font-bold text-center text-blue-700 mb-2">APPLEMALL</h1>
+    <h2 class="text-xl font-semibold text-center text-orange-600 mb-6">
+      Become an Applemall Agent Today
+    </h2>
+
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="hidden flex justify-center items-center space-x-1 mb-4">
+      <span class="dot w-3 h-3 bg-orange-500 rounded-full animate-bounce"></span>
+      <span class="dot w-3 h-3 bg-orange-500 rounded-full animate-bounce delay-200"></span>
+      <span class="dot w-3 h-3 bg-orange-500 rounded-full animate-bounce delay-400"></span>
+    </div>
+
+    <!-- Success Tick Animation -->
+    <div id="success-message" class="hidden text-center">
+      <div class="flex justify-center mb-4">
+        <svg class="w-16 h-16 text-green-500 stroke-2" viewBox="0 0 52 52">
+          <circle class="stroke-current text-green-200" cx="26" cy="26" r="25" fill="none" stroke-width="4"></circle>
+          <path class="check stroke-current text-green-500" fill="none" stroke-width="4" d="M14 27l7 7 17-17"/>
+        </svg>
+      </div>
+      <p class="text-green-600 font-semibold text-lg mb-2">Account created successfully!</p>
+      <p class="text-gray-700 text-sm mb-2">A summary of your details has been sent to your email.</p>
+      <div id="account-summary" class="text-left text-gray-600 text-sm"></div>
+    </div>
+
+    <!-- Registration Form -->
+    <form id="registration-form" method="POST" class="space-y-5">
+      {% csrf_token %}
+      <!-- Parent Reference -->
+      <div>
+        <label for="{{ form.parent_reference.id_for_label }}" class="block text-sm font-medium text-gray-700">
+          {{ form.parent_reference.label }} (Optional)
+        </label>
+        {{ form.parent_reference }}
+      </div>
+
+      <!-- Name -->
+      <div>
+        <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">
+          {{ form.name.label }}
+        </label>
+        {{ form.name }}
+      </div>
+
+      <!-- Phone -->
+      <div>
+        <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-gray-700">
+          {{ form.phone.label }}
+        </label>
+        {{ form.phone }}
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">
+          {{ form.email.label }}
+        </label>
+        {{ form.email }}
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label for="id_password" class="block text-sm font-medium text-gray-700">
+          Password
+        </label>
+        <input type="password" name="password" id="id_password" required>
+      </div>
+
+      <!-- Confirm Password -->
+      <div>
+        <label for="id_password2" class="block text-sm font-medium text-gray-700">
+          Confirm Password
+        </label>
+        <input type="password" name="password2" id="id_password2" required>
+      </div>
+
+      <!-- Agent Type -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Agent Type</label>
+        <div class="flex gap-4 items-center">
+          <label class="flex items-center gap-2">
+            <input type="radio" name="is_shop" value="False" id="freelance-agent" checked/>
+            <span>Freelance Agent</span>
+          </label>
+          <label class="flex items-center gap-2">
+            <input type="radio" name="is_shop" value="True" id="shop-agent"/>
+            <span>Shop Agent</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Shop Fields -->
+      <div id="shop-fields" class="space-y-3 hidden">
+        <div>
+          <label for="{{ form.shop_name.id_for_label }}" class="block text-sm font-medium text-gray-700">
+            {{ form.shop_name.label }}
+          </label>
+          {{ form.shop_name }}
+        </div>
+        <div>
+          <label for="{{ form.shop_location.id_for_label }}" class="block text-sm font-medium text-gray-700">
+            {{ form.shop_location.label }}
+          </label>
+          {{ form.shop_location }}
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit"
+              class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-lg transition">
+        Register
+      </button>
+    </form>
+
+    <p class="mt-6 text-center text-sm text-gray-600">
+      Already have an account?
+      <a href="{% url 'login' %}" class="text-orange-500 hover:underline font-semibold">Login</a>
+    </p>
+  </div>
+
+  <style>
+    input, select, textarea {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      outline: none;
+      font-size: 0.95rem;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #f97316;
+      box-shadow: 0 0 0 2px rgba(249,115,22,0.25);
+    }
+
+    /* Spinner */
+    .dot { animation: bounce 1s infinite; }
+    .dot.delay-200 { animation-delay: 0.2s; }
+    .dot.delay-400 { animation-delay: 0.4s; }
+    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+    /* Tick animation */
+    .check { stroke-dasharray: 48; stroke-dashoffset: 48; animation: draw 0.5s forwards 0.5s; }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+  </style>
+
+  <script>
+    // Toggle shop fields
+    const freelanceRadio = document.getElementById("freelance-agent");
+    const shopRadio = document.getElementById("shop-agent");
+    const shopFields = document.getElementById("shop-fields");
+    function toggleShopFields() {
+      shopFields.classList.toggle("hidden", !shopRadio.checked);
+    }
+    freelanceRadio.addEventListener("change", toggleShopFields);
+    shopRadio.addEventListener("change", toggleShopFields);
+    toggleShopFields();
+
+    // Form submit
+    const form = document.getElementById("registration-form");
+    const spinner = document.getElementById("loading-spinner");
+    const successMessage = document.getElementById("success-message");
+    const accountSummary = document.getElementById("account-summary");
+
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      spinner.classList.remove("hidden");
+
+      setTimeout(() => {
+        spinner.classList.add("hidden");
+        form.classList.add("hidden");
+        successMessage.classList.remove("hidden");
+
+        const name = document.getElementById("id_name").value;
+        const phone = document.getElementById("id_phone").value;
+        const email = document.getElementById("id_email").value;
+        const shopName = document.getElementById("id_shop_name") ? document.getElementById("id_shop_name").value : '';
+        const shopLocation = document.getElementById("id_shop_location") ? document.getElementById("id_shop_location").value : '';
+
+        let summaryHtml = `<p><strong>Name:</strong> ${name}</p>`;
+        summaryHtml += `<p><strong>Phone:</strong> ${phone}</p>`;
+        summaryHtml += `<p><strong>Email:</strong> ${email}</p>`;
+        if(shopName) summaryHtml += `<p><strong>Shop:</strong> ${shopName}</p>`;
+        if(shopLocation) summaryHtml += `<p><strong>Shop Location:</strong> ${shopLocation}</p>`;
+        accountSummary.innerHTML = summaryHtml;
+
+      }, 2000);
+    });
+  </script>
 
 </body>
 </html>

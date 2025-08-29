@@ -1,56 +1,53 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>All Parcels</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100">
+{% extends "agents/base.html" %}
 
+{% block title %}Parcels - Applemall{% endblock %}
+
+{% block content %}
 <div class="max-w-6xl mx-auto mt-10 bg-white shadow-xl rounded-2xl p-8">
+
     <h1 class="text-3xl font-bold text-blue-700 mb-6 text-center">📦 All Parcels</h1>
 
-    <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-        <thead class="bg-blue-600 text-white">
-            <tr>
-                <th class="px-6 py-3 text-left">Tracking Code</th>
-                <th class="px-6 py-3 text-left">Receiver</th>
-                <th class="px-6 py-3 text-left">Phone</th>
-                <th class="px-6 py-3 text-left">Destination</th>
-                <th class="px-6 py-3 text-left">Status</th>
-                <th class="px-6 py-3 text-left">Date</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
-            {% for parcel in parcels %}
-            <tr class="hover:bg-gray-50">
-                <td class="px-6 py-4 font-medium">{{ parcel.tracking_code }}</td>
-                <td class="px-6 py-4">{{ parcel.receiver_name }}</td>
-                <td class="px-6 py-4">{{ parcel.receiver_phone }}</td>
-                <td class="px-6 py-4">{{ parcel.destination|default:"N/A" }}</td>
-                <td class="px-6 py-4">
-                    <span class="px-3 py-1 rounded-full text-sm font-semibold
-                        {% if parcel.status == 'delivered' %}
-                            bg-green-100 text-green-700
-                        {% elif parcel.status == 'in_transit' %}
-                            bg-yellow-100 text-yellow-700
-                        {% else %}
-                            bg-gray-100 text-gray-700
-                        {% endif %}">
-                        {{ parcel.status|capfirst }}
-                    </span>
-                </td>
-                <td class="px-6 py-4">{{ parcel.created_at|date:"M d, Y" }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="6" class="text-center py-5 text-gray-500">No parcels found.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+    <div class="overflow-x-auto">
+        <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
+            <thead class="bg-blue-600 text-white">
+                <tr>
+                    <th class="px-6 py-3 text-left">Tracking Code</th>
+                    <th class="px-6 py-3 text-left">Receiver</th>
+                    <th class="px-6 py-3 text-left">Phone</th>
+                    <th class="px-6 py-3 text-left">Destination</th>
+                    <th class="px-6 py-3 text-left">Status</th>
+                    <th class="px-6 py-3 text-left">Date</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for parcel in parcels %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium">{{ parcel.tracking_code }}</td>
+                    <td class="px-6 py-4">{{ parcel.receiver_name }}</td>
+                    <td class="px-6 py-4">{{ parcel.receiver_phone }}</td>
+                    <td class="px-6 py-4">{{ parcel.destination|default:"N/A" }}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-3 py-1 rounded-full text-sm font-semibold
+                            {% if parcel.status == 'delivered' %}
+                                bg-green-100 text-green-700
+                            {% elif parcel.status == 'in_transit' %}
+                                bg-yellow-100 text-yellow-700
+                            {% else %}
+                                bg-gray-100 text-gray-700
+                            {% endif %}">
+                            {{ parcel.status|capfirst }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">{{ parcel.created_at|date:"M d, Y" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center py-5 text-gray-500">No parcels found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-</body>
-</html>
+</div>
+{% endblock %}

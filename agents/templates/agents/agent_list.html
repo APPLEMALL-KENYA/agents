@@ -1,0 +1,42 @@
+{% extends "agents/base.html" %}
+
+{% block title %}Agents - Applemall{% endblock %}
+
+{% block content %}
+  <h2 class="text-2xl font-bold mb-4">Agents</h2>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow">
+      <thead class="bg-orange-600 text-white">
+        <tr>
+          <th class="px-4 py-2 text-left">#</th>
+          <th class="px-4 py-2 text-left">Name</th>
+          <th class="px-4 py-2 text-left">Email</th>
+          <th class="px-4 py-2 text-left">Phone</th>
+          <th class="px-4 py-2 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for agent in agents %}
+        <tr class="border-b hover:bg-gray-100">
+          <td class="px-4 py-2">{{ forloop.counter }}</td>
+          <td class="px-4 py-2">{{ agent.name }}</td>
+          <td class="px-4 py-2">{{ agent.email }}</td>
+          <td class="px-4 py-2">{{ agent.phone }}</td>
+          <td class="px-4 py-2">
+            <a href="#" class="text-blue-600 hover:underline">View</a> |
+            <a href="#" class="text-green-600 hover:underline">Edit</a> |
+            <a href="#" class="text-red-600 hover:underline">Delete</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="px-4 py-2 text-center text-gray-500">
+            No agents found.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

@@ -8,9 +8,9 @@ class ShopAdmin(admin.ModelAdmin):
 
 @admin.register(Agent)
 class AgentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'shop', 'phone', 'email', 'active', 'created_at']
-    list_filter = ['active', 'shop']
-    search_fields = ['name', 'phone', 'email', 'shop__name']
+    list_display = ['name', 'phone', 'email', 'reference_code', 'is_shop', 'commission_balance']
+    list_filter = ['is_shop']
+    search_fields = ['name', 'reference_code', 'email', 'phone']
 
 @admin.register(Parcel)
 class ParcelAdmin(admin.ModelAdmin):

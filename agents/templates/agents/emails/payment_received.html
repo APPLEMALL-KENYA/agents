@@ -1,0 +1,9 @@
+{% extends "agents/emails/base_email.html" %}
+
+{% block content %}
+  <h2>✅ Payment Received</h2>
+  <p>Hello {{ agent_name }},</p>
+  <p>We’ve received a payment of <strong>KES {{ amount }}</strong> for parcel <strong>{{ parcel_ref }}</strong>.</p>
+  <p>Your updated balance is <strong>KES {{ balance }}</strong>.</p>
+  <a href="{{ dashboard_url }}" class="btn">View Dashboard</a>
+{% endblock %}

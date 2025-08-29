@@ -1,0 +1,9 @@
+{% extends "agents/emails/base_email.html" %}
+
+{% block content %}
+  <h2>🎉 Agent Registration Successful</h2>
+  <p>Welcome, {{ agent_name }}!</p>
+  <p>You have successfully registered as an agent under Applemall.</p>
+  <p>Your Agent ID: <strong>{{ agent_id }}</strong></p>
+  <a href="{{ dashboard_url }}" class="btn">Access Your Dashboard</a>
+{% endblock %}
