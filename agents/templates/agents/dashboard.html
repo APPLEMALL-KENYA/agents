@@ -20,163 +20,30 @@
   </div>
 </header>
 
-<!-- Main Container -->
+<!-- Numeric Summary Cards -->
 <div class="container mx-auto mt-6 grid grid-cols-1 md:grid-cols-4 gap-6">
 
-  <!-- Cards -->
-  <div class="bg-white shadow rounded p-4">
+  <a href="{% url 'agents:shop_list' %}" class="block bg-white shadow rounded p-4 hover:shadow-lg transition">
     <h2 class="font-bold text-lg">Total Shops</h2>
-    <p class="text-2xl mt-2">{{ shops.count }}</p>
-  </div>
-  <div class="bg-white shadow rounded p-4">
+    <p class="text-2xl mt-2">{{ total_shops }}</p>
+  </a>
+
+  <a href="{% url 'agents:agent_list' %}" class="block bg-white shadow rounded p-4 hover:shadow-lg transition">
     <h2 class="font-bold text-lg">Total Agents</h2>
-    <p class="text-2xl mt-2">{{ agents.count }}</p>
-  </div>
-  <div class="bg-white shadow rounded p-4">
+    <p class="text-2xl mt-2">{{ total_agents }}</p>
+  </a>
+
+  <a href="{% url 'agents:parcel_list' %}" class="block bg-white shadow rounded p-4 hover:shadow-lg transition">
     <h2 class="font-bold text-lg">Total Parcels</h2>
-    <p class="text-2xl mt-2">{{ parcels.count }}</p>
-  </div>
-  <div class="bg-white shadow rounded p-4">
+    <p class="text-2xl mt-2">{{ total_parcels }}</p>
+  </a>
+
+  <a href="{% url 'agents:parcel_list' %}?status=pending" class="block bg-white shadow rounded p-4 hover:shadow-lg transition">
     <h2 class="font-bold text-lg">Pending Parcels</h2>
-    <p class="text-2xl mt-2">{{ pending_parcels.count }}</p>
-  </div>
-</div>
-
-<!-- Listings -->
-<div class="container mx-auto mt-6 space-y-6">
-
-  <!-- Shops Table -->
-  <section class="bg-white shadow rounded p-4">
-    <h2 class="text-xl font-bold mb-4">Shops</h2>
-    <input type="text" placeholder="Search shops..." class="border px-3 py-2 rounded w-full mb-3" id="shopSearch">
-    <div class="overflow-x-auto">
-      <table class="w-full table-auto border-collapse">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="border px-4 py-2">ID</th>
-            <th class="border px-4 py-2">Name</th>
-            <th class="border px-4 py-2">Location</th>
-            <th class="border px-4 py-2">Phone</th>
-            <th class="border px-4 py-2">Email</th>
-            <th class="border px-4 py-2">Created At</th>
-            <th class="border px-4 py-2">Updated At</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for shop in shops %}
-          <tr class="hover:bg-gray-50">
-            <td class="border px-4 py-2">{{ shop.id }}</td>
-            <td class="border px-4 py-2">{{ shop.name }}</td>
-            <td class="border px-4 py-2">{{ shop.location }}</td>
-            <td class="border px-4 py-2">{{ shop.phone }}</td>
-            <td class="border px-4 py-2">{{ shop.email }}</td>
-            <td class="border px-4 py-2">{{ shop.created_at|date:"Y-m-d H:i" }}</td>
-            <td class="border px-4 py-2">{{ shop.updated_at|date:"Y-m-d H:i" }}</td>
-          </tr>
-          {% empty %}
-          <tr><td colspan="7" class="text-center py-4">No shops found</td></tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- Agents Table -->
-  <section class="bg-white shadow rounded p-4">
-    <h2 class="text-xl font-bold mb-4">Agents</h2>
-    <input type="text" placeholder="Search agents..." class="border px-3 py-2 rounded w-full mb-3" id="agentSearch">
-    <div class="overflow-x-auto">
-      <table class="w-full table-auto border-collapse">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="border px-4 py-2">Name</th>
-            <th class="border px-4 py-2">Phone</th>
-            <th class="border px-4 py-2">Email</th>
-            <th class="border px-4 py-2">Ref Code</th>
-            <th class="border px-4 py-2">Is Shop</th>
-            <th class="border px-4 py-2">Commission</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for agent in agents %}
-          <tr class="hover:bg-gray-50">
-            <td class="border px-4 py-2">{{ agent.name }}</td>
-            <td class="border px-4 py-2">{{ agent.phone }}</td>
-            <td class="border px-4 py-2">{{ agent.email }}</td>
-            <td class="border px-4 py-2">{{ agent.reference_code }}</td>
-            <td class="border px-4 py-2">{{ agent.is_shop }}</td>
-            <td class="border px-4 py-2">{{ agent.commission_balance }}</td>
-          </tr>
-          {% empty %}
-          <tr><td colspan="6" class="text-center py-4">No agents found</td></tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- Parcels Table -->
-  <section class="bg-white shadow rounded p-4">
-    <h2 class="text-xl font-bold mb-4">Parcels</h2>
-    <input type="text" placeholder="Search parcels..." class="border px-3 py-2 rounded w-full mb-3" id="parcelSearch">
-    <div class="overflow-x-auto">
-      <table class="w-full table-auto border-collapse">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="border px-4 py-2">Tracking Code</th>
-            <th class="border px-4 py-2">Shop</th>
-            <th class="border px-4 py-2">Agent</th>
-            <th class="border px-4 py-2">Sender</th>
-            <th class="border px-4 py-2">Receiver</th>
-            <th class="border px-4 py-2">Receiver Phone</th>
-            <th class="border px-4 py-2">Status</th>
-            <th class="border px-4 py-2">Created At</th>
-            <th class="border px-4 py-2">Updated At</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for parcel in parcels %}
-          <tr class="hover:bg-gray-50">
-            <td class="border px-4 py-2">{{ parcel.tracking_code }}</td>
-            <td class="border px-4 py-2">
-                {% if parcel.shop %}
-                  {{ parcel.shop.name }}
-                {% else %}
-                  N/A
-                {% endif %}
-              </td>
-              
-              <td class="border px-4 py-2">
-                {% if parcel.agent %}
-                  {{ parcel.agent.name }}
-                {% else %}
-                  N/A
-                {% endif %}
-              </td>              
-              <td class="border px-4 py-2">
-                {% if parcel.agent %}
-                  {{ parcel.agent.name }}
-                {% else %}
-                  N/A
-                {% endif %}
-              </td>
-            <td class="border px-4 py-2">{{ parcel.sender_name }}</td>
-            <td class="border px-4 py-2">{{ parcel.receiver_name }}</td>
-            <td class="border px-4 py-2">{{ parcel.receiver_phone }}</td>
-            <td class="border px-4 py-2">{{ parcel.status }}</td>
-            <td class="border px-4 py-2">{{ parcel.created_at|date:"Y-m-d H:i" }}</td>
-            <td class="border px-4 py-2">{{ parcel.updated_at|date:"Y-m-d H:i" }}</td>
-          </tr>
-          {% empty %}
-          <tr><td colspan="9" class="text-center py-4">No parcels found</td></tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </section>
+    <p class="text-2xl mt-2">{{ total_pending_parcels }}</p>
+  </a>
 
 </div>
 
 </body>
 </html>
-
