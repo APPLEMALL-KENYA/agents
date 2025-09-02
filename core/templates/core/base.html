@@ -1,0 +1,36 @@
+<!-- Bell Icon Dropdown -->
+<div class="relative inline-block text-left">
+    <button id="notifDropdown" class="relative">
+      🔔
+      {% if request.user.notifications.filter(is_read=False).count > 0 %}
+        <span class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full px-1">
+          {{ request.user.notifications.filter(is_read=False).count }}
+        </span>
+      {% endif %}
+    </button>
+  
+    <!-- Dropdown Menu -->
+    <div id="notifMenu" class="hidden absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg z-50">
+      <ul>
+        {% for notif in request.user.notifications.all|slice:":5" %}
+          <li class="{% if not notif.is_read %}bg-gray-100{% endif %} px-3 py-2">
+            <a href="{% url 'notifications:mark_as_read' notif.id %}">
+              {{ notif.message|truncatechars:50 }}
+            </a>
+          </li>
+        {% empty %}
+          <li class="px-3 py-2 text-gray-500">No notifications</li>
+        {% endfor %}
+      </ul>
+      <div class="px-3 py-2 border-t text-center">
+        <a href="{% url 'notifications:list' %}" class="text-blue-600">View all</a>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  document.getElementById("notifDropdown").addEventListener("click", function() {
+    document.getElementById("notifMenu").classList.toggle("hidden");
+  });
+  </script>
+  

@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rider Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+
+  <div class="max-w-7xl mx-auto p-4 md:p-6">
+
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 md:gap-0">
+      <h1 class="text-3xl font-bold text-green-700">Hello, {{ rider.user.username }}</h1>
+
+      <!-- Wallet & Notifications -->
+      <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
+
+        <!-- Wallet Card -->
+        <div class="bg-white shadow-lg rounded-xl p-4 text-center w-full md:w-auto">
+          <p class="text-sm text-gray-500">Wallet Balance</p>
+          <p class="text-2xl font-bold text-green-600">{{ wallet.balance }} KSh</p>
+          <a href="{% url 'withdraw_request' %}" 
+             class="mt-2 inline-block px-4 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition">Withdraw</a>
+        </div>
+
+        <!-- Notifications Dropdown -->
+        <div class="relative w-full md:w-auto">
+          <button id="notifBtn" class="bg-white shadow-lg rounded-xl p-3 flex items-center gap-2 w-full md:w-auto justify-between hover:bg-gray-50 focus:outline-none transition">
+            <div class="flex items-center gap-2">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+              </svg>
+              <span class="font-semibold text-gray-700">Notifications</span>
+            </div>
+            <span class="bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{{ notifications|length }}</span>
+          </button>
+          <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-full md:w-80 bg-white shadow-xl rounded-xl overflow-hidden z-50">
+            <ul class="divide-y divide-gray-200 max-h-64 overflow-y-auto">
+              {% for note in notifications %}
+              <li class="px-4 py-3 hover:bg-gray-50 cursor-pointer {{ note.read|yesno:'text-gray-500,text-gray-900' }}">
+                <p class="text-sm">{{ note.message }}</p>
+                <p class="text-xs text-gray-400 mt-1">{{ note.created_at|date:"d M Y H:i" }}</p>
+              </li>
+              {% empty %}
+              <li class="px-4 py-3 text-gray-500">No notifications.</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Assigned Parcels -->
+    <section class="mb-6 bg-white shadow-lg rounded-xl p-4">
+      <h2 class="text-xl font-semibold text-green-700 mb-4">Assigned Parcels</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full border-collapse table-auto">
+          <thead class="bg-green-600 text-white">
+            <tr>
+              <th class="px-4 py-2 text-left">Parcel Ref</th>
+              <th class="px-4 py-2 text-left">Status</th>
+              <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            {% for job in jobs %}
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-2">{{ job.parcel.reference }}</td>
+              <td class="px-4 py-2">
+                <span class="px-2 py-1 rounded-full text-white text-sm 
+                {% if job.status == 'DELIVERED' %}bg-green-600
+                {% elif job.status == 'IN_TRANSIT' %}bg-orange-500
+                {% else %}bg-gray-400{% endif %}">
+                  {{ job.status }}
+                </span>
+              </td>
+              <td class="px-4 py-2 flex flex-col sm:flex-row gap-2">
+                <a href="{% url 'scan_parcel' job.parcel.id %}" 
+                   class="px-3 py-1 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition">Update</a>
+                <form method="post" action="{% url 'scan_parcel' job.parcel.id %}" class="flex gap-2">
+                  {% csrf_token %}
+                  <button type="submit" name="action" value="receipt_pdf" 
+                          class="px-3 py-1 bg-green-600 text-white rounded-full hover:bg-green-700 transition">Receipt PDF</button>
+                  <button type="submit" name="action" value="delivery_note_pdf" 
+                          class="px-3 py-1 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition">Delivery Note</button>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="3" class="text-center py-4 text-gray-500">No assigned parcels.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Pending Withdrawals -->
+    {% if pending_withdrawals %}
+    <section class="bg-white shadow-lg rounded-xl p-4">
+      <h2 class="text-xl font-semibold text-green-700 mb-4">Pending Withdrawals</h2>
+      <ul class="divide-y divide-gray-200">
+        {% for wd in pending_withdrawals %}
+        <li class="py-2 flex justify-between items-center">
+          <span>Ksh {{ wd.amount }} requested on {{ wd.created_at|date:"d M Y H:i" }}</span>
+          <span class="px-2 py-1 rounded-full text-white text-sm
+            {% if wd.status == 'PENDING' %}bg-orange-500{% else %}bg-green-600{% endif %}">{{ wd.status }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+  </div>
+
+  <script>
+    const btn = document.getElementById('notifBtn');
+    const dropdown = document.getElementById('notifDropdown');
+
+    btn.addEventListener('click', () => {
+      dropdown.classList.toggle('hidden');
+    });
+
+    window.addEventListener('click', e => {
+      if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.add('hidden');
+      }
+    });
+  </script>
+
+</body>
+</html>

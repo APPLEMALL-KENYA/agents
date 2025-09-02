@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+</head>
+<body>
+<h2>Scan Parcel for Pickup</h2>
+<form method="post">
+  {% csrf_token %}
+  <input type="text" id="reference" name="reference" readonly>
+  <button type="submit">Update Status</button>
+</form>
+
+<div id="qr-reader" style="width:500px"></div>
+
+<script>
+function onScanSuccess(decodedText, decodedResult) {
+    document.getElementById('reference').value = decodedText;
+}
+var html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
+html5QrcodeScanner.render(onScanSuccess);
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Rider Dashboard{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-green-600 text-white p-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold">Hello, {{ rider.user.username }}</h1>
+    <div class="relative">
+      <button id="notif-toggle" class="relative">
+        🔔
+        {% if notifications|length %}
+        <span class="absolute -top-2 -right-2 bg-orange-500 rounded-full w-4 h-4 text-xs flex items-center justify-center text-white">
+          {{ notifications|length }}
+        </span>
+        {% endif %}
+      </button>
+
+      <!-- Notifications dropdown -->
+      <div id="notif-dropdown" class="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded hidden z-50">
+        <ul class="divide-y divide-gray-200 max-h-64 overflow-y-auto">
+          {% for note in notifications %}
+          <li class="p-2 {{ note.read|yesno:'text-gray-400,text-black' }}">{{ note.message }}</li>
+          {% empty %}
+          <li class="p-2 text-gray-500">No notifications</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl mx-auto p-6">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script>
+    const toggle = document.getElementById('notif-toggle');
+    const dropdown = document.getElementById('notif-dropdown');
+    toggle.addEventListener('click', () => {
+      dropdown.classList.toggle('hidden');
+    });
+  </script>
+
+</body>
+</html>

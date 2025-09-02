@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdraw Wallet</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <div class="max-w-2xl mx-auto p-6">
+
+    <!-- Header -->
+    <header class="mb-6">
+      <h1 class="text-3xl font-bold text-red-600">Withdraw Wallet</h1>
+      <p class="mt-2 text-gray-600">Current Balance: <span class="font-bold text-green-600">{{ wallet.balance }} KSh</span></p>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+      <div class="mb-4">
+        {% for message in messages %}
+          <div class="p-3 rounded mb-2 {% if message.tags %}bg-{{ message.tags }}-100 text-{{ message.tags }}-800{% else %}bg-gray-100{% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Withdraw Form -->
+    <form method="post" class="bg-white shadow rounded p-6">
+      {% csrf_token %}
+      <div class="mb-4">
+        <label for="amount" class="block text-gray-700 font-semibold mb-2">Amount to Withdraw (KSh)</label>
+        <input type="number" step="0.01" name="amount" id="amount" 
+               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-red-500" 
+               max="{{ wallet.balance }}" required>
+      </div>
+      <button type="submit" 
+              class="w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+        Submit Withdrawal Request
+      </button>
+    </form>
+
+    <!-- Back button -->
+    <div class="mt-4">
+      <a href="{% url 'rider_dashboard' %}" 
+         class="text-red-600 hover:underline">← Back to Dashboard</a>
+    </div>
+
+  </div>
+
+</body>
+</html>

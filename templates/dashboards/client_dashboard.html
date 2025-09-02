@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Client Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-yellow-50 min-h-screen font-sans">
+
+    <!-- Header -->
+    <header class="bg-orange-700 text-white p-4 shadow flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            {% if user.is_authenticated %}
+                {% if user.profile.avatar_url %}
+                    <img src="{{ user.profile.avatar_url }}" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-white">
+                {% else %}
+                    <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
+                {% endif %}
+                <div>
+                    <h1 class="text-2xl font-bold">Hello, {{ user.username }}</h1>
+                    <p class="text-sm text-white/80">Last login: {{ user.last_login|date:"M d, Y H:i" }}</p>
+                </div>
+            {% else %}
+                <h1 class="text-2xl font-bold">Welcome, Guest</h1>
+            {% endif %}
+        </div>
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" class="bg-white text-yellow-600 px-3 py-1 rounded hover:bg-yellow-100">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="bg-white text-yellow-600 px-3 py-1 rounded hover:bg-yellow-100">Login</a>
+        {% endif %}
+    </header>
+
+    <main class="p-6 space-y-6">
+
+        <!-- Notifications -->
+        {% if notifications %}
+        <div class="space-y-2">
+            {% for note in notifications %}
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-800 px-4 py-3 rounded shadow flex justify-between items-center">
+                <span>{{ note.message }}</span>
+                <span class="text-xs text-gray-500">{{ note.created_at|date:"M d, Y H:i" }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Parcel Search Form -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-lg font-semibold text-green-700 mb-4">Track Your Parcel</h2>
+            <form method="GET" action="{% url 'track_parcel' %}" class="flex gap-2">
+                <input type="text" name="reference" placeholder="Enter Parcel Reference"
+                       class="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-300">
+                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded">
+                    Track
+                </button>
+            </form>
+            {% if tracked_parcel %}
+                <div class="mt-4 bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded shadow">
+                    Parcel <b>{{ tracked_parcel.reference }}</b> is currently <b>{{ tracked_parcel.status }}</b>.
+                </div>
+            {% elif searched %}
+                <div class="mt-4 bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded shadow">
+                    No parcel found with that reference.
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Client Summary -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-lg shadow p-4 border-l-4 border-green-500 hover:scale-105 transition transform">
+                <h2 class="text-lg font-semibold text-green-700">Active Orders</h2>
+                <p class="text-2xl mt-2 text-gray-800">{{ active_orders_count }}</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-4 border-l-4 border-orange-400 hover:scale-105 transition transform">
+                <h2 class="text-lg font-semibold text-orange-600">Delivered Parcels</h2>
+                <p class="text-2xl mt-2 text-gray-800">{{ delivered_parcels_count }}</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-4 border-l-4 border-red-400 hover:scale-105 transition transform">
+                <h2 class="text-lg font-semibold text-red-600">Cancelled Parcels</h2>
+                <p class="text-2xl mt-2 text-gray-800">{{ cancelled_parcels_count }}</p>
+            </div>
+        </div>
+
+        <!-- Parcel & Order History -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-lg font-semibold text-green-700 mb-4">Parcel History</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Reference</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Status</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Payment</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Invoice</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Delivery Note</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for parcel in parcels %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-2 text-gray-800">{{ parcel.reference }}</td>
+                            <td class="px-4 py-2">
+                                {% if parcel.status == "DELIVERED" %}
+                                    <span class="text-green-700 font-semibold">{{ parcel.status }}</span>
+                                {% elif parcel.status == "CANCELLED" %}
+                                    <span class="text-red-600 font-semibold">{{ parcel.status }}</span>
+                                {% else %}
+                                    <span class="text-orange-600 font-semibold">{{ parcel.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-4 py-2">{{ parcel.payment_status }}</td>
+                            <td class="px-4 py-2">
+                                {% if parcel.receipt %}
+                                    <a href="{{ parcel.receipt.get_absolute_url }}" class="text-blue-500 hover:underline">View</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="px-4 py-2">
+                                {% if parcel.delivery_note %}
+                                    <a href="{{ parcel.delivery_note.get_absolute_url }}" class="text-blue-500 hover:underline">View</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="px-4 py-2 text-gray-500 text-center">No parcels found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Receipt - {{ invoice.parcel.reference }}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header with precise logo */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header img {
+            width: 180px; /* precise width */
+            height: auto; /* maintain aspect ratio */
+            display: block;
+            margin: 0 auto 10px auto;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            color: #111;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            font-size: 18px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .details th,
+        .details td {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .details th {
+            background-color: #f2f2f2;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #666;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo -->
+        <div class="header">
+            <img src="https://applemall.co.ke/static/img/logoNoText.png" alt="Applemall Logo">
+            <h1>Payment Receipt</h1>
+        </div>
+
+        <!-- Customer & Parcel Details -->
+        <div class="section">
+            <h2>Parcel Details</h2>
+            <div class="details">
+                <table>
+                    <tr>
+                        <th>Parcel Reference</th>
+                        <td>{{ invoice.parcel.reference }}</td>
+                    </tr>
+                    <tr>
+                        <th>Customer Name</th>
+                        <td>{{ invoice.parcel.customer }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{ invoice.parcel.customer_email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Amount Paid</th>
+                        <td>KES {{ invoice.amount }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <td>{{ invoice.created_at }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            Thank you for using Applemall.<br>
+            Visit us at <a href="https://applemall.co.ke">applemall.co.ke</a>
+        </div>
+    </div>
+</body>
+</html>

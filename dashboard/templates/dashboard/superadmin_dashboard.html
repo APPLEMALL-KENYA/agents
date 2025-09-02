@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SuperAdmin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow p-4 flex justify-between items-center sticky top-0 z-50">
+    <h1 class="text-2xl font-bold text-blue-600">SuperAdmin Dashboard</h1>
+    <div class="flex items-center gap-4">
+      <span class="text-gray-600">Welcome, SuperAdmin</span>
+      <a href="{% url 'logout' %}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="p-6 space-y-8">
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-gray-500">Total Parcels</h3>
+        <p class="text-3xl font-bold text-blue-600">{{ total_parcels }}</p>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-gray-500">Active Agents</h3>
+        <p class="text-3xl font-bold text-green-600">{{ total_agents }}</p>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-gray-500">Customers</h3>
+        <p class="text-3xl font-bold text-purple-600">{{ total_customers }}</p>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-gray-500">Revenue</h3>
+        <p class="text-3xl font-bold text-orange-600">KSH {{ total_revenue }}</p>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-lg font-semibold mb-4">Parcels by Status</h3>
+        <canvas id="statusChart"></canvas>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-lg font-semibold mb-4">Revenue Trends</h3>
+        <canvas id="revenueChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Data Tables -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- Top Agents -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-lg font-semibold mb-4">Top Agents</h3>
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-100 text-gray-600">
+              <th class="p-2">Agent</th>
+              <th class="p-2">Parcels</th>
+              <th class="p-2">Earnings</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for agent in top_agents %}
+            <tr class="border-t">
+              <td class="p-2">{{ agent.name }}</td>
+              <td class="p-2">{{ agent.total_parcels }}</td>
+              <td class="p-2">KSH {{ agent.earnings }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="p-2 text-center text-gray-500">No data</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Recent Parcels -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-lg font-semibold mb-4">Recent Parcels</h3>
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-100 text-gray-600">
+              <th class="p-2">Reference</th>
+              <th class="p-2">Customer</th>
+              <th class="p-2">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for parcel in recent_parcels %}
+            <tr class="border-t">
+              <td class="p-2">{{ parcel.reference }}</td>
+              <td class="p-2">{{ parcel.customer.name }}</td>
+              <td class="p-2">{{ parcel.status }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="p-2 text-center text-gray-500">No parcels</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Payment Approvals -->
+    <div class="bg-white p-6 rounded-xl shadow">
+      <h3 class="text-lg font-semibold mb-4">Pending Payment Approvals</h3>
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-gray-100 text-gray-600">
+            <th class="p-2">Transaction ID</th>
+            <th class="p-2">Agent</th>
+            <th class="p-2">Amount</th>
+            <th class="p-2">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for payment in pending_payments %}
+          <tr class="border-t">
+            <td class="p-2">{{ payment.transaction_id }}</td>
+            <td class="p-2">{{ payment.agent.name }}</td>
+            <td class="p-2">KSH {{ payment.amount }}</td>
+            <td class="p-2">
+              <a href="{% url 'approve_payment' payment.id %}" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Approve</a>
+              <a href="{% url 'reject_payment' payment.id %}" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Reject</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="p-2 text-center text-gray-500">No pending approvals</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Notifications -->
+    <div class="bg-white p-6 rounded-xl shadow">
+      <h3 class="text-lg font-semibold mb-4">System Notifications</h3>
+      <ul class="space-y-2">
+        {% for notification in notifications %}
+        <li class="border p-3 rounded-lg {% if not notification.read %}bg-yellow-50{% endif %}">
+          <p class="text-gray-700">{{ notification.message }}</p>
+          <span class="text-xs text-gray-400">{{ notification.timestamp }}</span>
+        </li>
+        {% empty %}
+        <li class="text-gray-500 text-center">No notifications</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Charts Script -->
+  <script>
+    // Parcels by Status
+    new Chart(document.getElementById('statusChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Pending', 'In Transit', 'Delivered', 'Failed'],
+        datasets: [{
+          data: {{ parcels_by_status|safe }},
+          backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#ef4444']
+        }]
+      }
+    });
+
+    // Revenue Trends
+    new Chart(document.getElementById('revenueChart'), {
+      type: 'line',
+      data: {
+        labels: {{ revenue_labels|safe }},
+        datasets: [{
+          label: 'Revenue (KSH)',
+          data: {{ revenue_data|safe }},
+          borderColor: '#3b82f6',
+          fill: true,
+          backgroundColor: 'rgba(59, 130, 246, 0.1)'
+        }]
+      }
+    });
+  </script>
+
+</body>
+</html>

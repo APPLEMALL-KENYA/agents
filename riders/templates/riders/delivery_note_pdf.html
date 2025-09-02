@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delivery Note - {{ delivery_note.parcel.reference }}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header with logo */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header img {
+            width: 180px;
+            height: auto;
+            display: block;
+            margin: 0 auto 10px auto;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            font-size: 18px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* QR Code */
+        .qr-code {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo -->
+        <div class="header">
+            <img src="https://applemall.co.ke/static/img/logoNoText.png" alt="Applemall Logo">
+            <h1>Delivery Note</h1>
+        </div>
+
+        <!-- Sender & Recipient -->
+        <div class="section">
+            <h2>Sender & Recipient Details</h2>
+            <table>
+                <tr>
+                    <th>Sender</th>
+                    <td>{{ delivery_note.parcel.sender_name }}</td>
+                </tr>
+                <tr>
+                    <th>Recipient</th>
+                    <td>{{ delivery_note.parcel.recipient_name }}</td>
+                </tr>
+                <tr>
+                    <th>Recipient Address</th>
+                    <td>{{ delivery_note.parcel.recipient_address }}</td>
+                </tr>
+                <tr>
+                    <th>Contact</th>
+                    <td>{{ delivery_note.parcel.recipient_phone }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Parcel Details -->
+        <div class="section">
+            <h2>Parcel Details</h2>
+            <table>
+                <tr>
+                    <th>Reference</th>
+                    <td>{{ delivery_note.parcel.reference }}</td>
+                </tr>
+                <tr>
+                    <th>Tracking Number</th>
+                    <td>{{ delivery_note.parcel.tracking_number }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>{{ delivery_note.parcel.description }}</td>
+                </tr>
+                <tr>
+                    <th>Weight</th>
+                    <td>{{ delivery_note.parcel.weight }} kg</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- QR Code -->
+        <div class="qr-code">
+            <img src="{{ delivery_note.qr_code_url }}" alt="Parcel QR Code" width="150">
+            <p>Scan to track</p>
+        </div>
+
+        <div class="footer">
+            Thank you for choosing Applemall.<br>
+            Visit us at <a href="https://applemall.co.ke">applemall.co.ke</a>
+        </div>
+    </div>
+</body>
+</html>

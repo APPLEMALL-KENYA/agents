@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - DropAgent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-yellow-50 min-h-screen flex items-center justify-center">
+
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-6 space-y-6">
+
+        <!-- Logo / Title -->
+        <div class="text-center">
+            <h1 class="text-2xl font-bold text-orange-700">Applemall Delivery Login</h1>
+            <p class="text-gray-500 mt-1">Select your role and enter credentials</p>
+        </div>
+
+        <!-- Login Form -->
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+
+            <!-- Role Selector -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-1" for="role">Login as:</label>
+                <select name="role" id="role" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-300">
+                    <option value="client" {% if role == 'client' %}selected{% endif %}>Client</option>
+                    <option value="rider" {% if role == 'rider' %}selected{% endif %}>Rider</option>
+                    <option value="agent" {% if role == 'agent' %}selected{% endif %}>Collecion Agent</option>
+                    <option value="superadmin" {% if role == 'superadmin' %}selected{% endif %}>C.E.O & MD </option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-medium mb-1" for="id_username">Username</label>
+                <input type="text" name="username" id="id_username" value="{{ form.username.value }}"
+                       class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-300">
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-medium mb-1" for="id_password">Password</label>
+                <input type="password" name="password" id="id_password"
+                       class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-300">
+            </div>
+
+            <button type="submit" class="w-full bg-orange-700 hover:bg-orange-800 text-white font-semibold px-4 py-2 rounded">
+                Login
+            </button>
+        </form>
+
+        <p class="text-center text-gray-500 text-sm">or</p>
+
+        <!-- Parcel Search for Guests -->
+        <div class="space-y-2">
+            <h2 class="text-center text-gray-700 font-semibold">Track Parcel without Logging In</h2>
+            <form method="GET" action="{% url 'track_parcel' %}" class="flex gap-2">
+                <input type="text" name="reference" placeholder="Enter Parcel Reference"
+                       class="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-300">
+                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded">
+                    Track
+                </button>
+            </form>
+            {% if tracked_parcel %}
+                <div class="mt-2 bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-2 rounded shadow">
+                    Parcel <b>{{ tracked_parcel.reference }}</b> is currently <b>{{ tracked_parcel.status }}</b>.
+                </div>
+            {% elif searched %}
+                <div class="mt-2 bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-2 rounded shadow">
+                    No parcel found with that reference.
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+</body>
+</html>

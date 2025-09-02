@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Ongoing Jobs{% endblock %}
+{% block content %}
+
+<h2 class="text-2xl font-bold mb-4 text-orange-600">Ongoing Jobs</h2>
+<ul>
+  {% for job in jobs %}
+  <li class="p-4 mb-2 bg-white rounded shadow flex justify-between items-center">
+    <span>{{ job.parcel.reference }} - {{ job.status }}</span>
+    <a href="{% url 'scan_parcel' job.parcel.id %}" class="bg-yellow-500 px-3 py-1 rounded hover:bg-yellow-600">Update</a>
+  </li>
+  {% empty %}
+  <li class="text-gray-500">No ongoing jobs.</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

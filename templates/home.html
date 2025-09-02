@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Applemall logistics Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-yellow-50 min-h-screen flex items-center justify-center">
+
+    <div class="text-center p-6 bg-white rounded-lg shadow-lg">
+        <h1 class="text-3xl font-bold text-orange-700 mb-4">Welcome to APPLEMALL</h1>
+        <p class="text-gray-700 mb-6">Manage and track your parcels easily.</p>
+        <a href="{% url 'login' %}" class="bg-orange-700 hover:bg-orange-800 text-white px-6 py-2 rounded font-semibold">
+            Login
+        </a>
+        <a href="{% url 'track_parcel' %}" class="ml-4 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded font-semibold">
+            Track Parcel
+        </a>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit"
+          class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+          Login
+        </button>
+      </form>
+</body>
+</html>

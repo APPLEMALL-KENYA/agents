@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Rider</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+<h1 class="text-2xl font-bold mb-4">Edit Rider: {{ rider.user.username }}</h1>
+<form method="post">
+    {% csrf_token %}
+    <label class="block mb-2">Phone</label>
+    <input type="text" name="phone" value="{{ rider.phone }}" class="border p-2 mb-4 w-full">
+    <label class="block mb-2">Status</label>
+    <select name="status" class="border p-2 mb-4 w-full">
+        <option value="ACTIVE" {% if rider.status=='ACTIVE' %}selected{% endif %}>Active</option>
+        <option value="SUSPENDED" {% if rider.status=='SUSPENDED' %}selected{% endif %}>Suspended</option>
+        <option value="PROBATION" {% if rider.status=='PROBATION' %}selected{% endif %}>Probation</option>
+    </select>
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save</button>
+</form>
+</body>
+</html>
