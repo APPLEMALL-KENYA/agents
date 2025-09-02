@@ -78,26 +78,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "dropagent.wsgi.application"
 
-# --------------------------------------------------------------------
 # Database
-# --------------------------------------------------------------------
+# Default: SQLite (for local dev)
 DATABASES = {
-    "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        ssl_require=True,  # force SSL for Railway Postgres
-    )
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 }
-
 # Extra fallback for some psycopg2 versions
-if DATABASES["default"]["ENGINE"] == "django.db.backends.postgresql":
-    DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}
-
+if os.environ.get("DATABASE_URL"):
+    DATABASES["default"] = dj_database_url.parse(
+        os.environ["DATABASE_URL"],
+        conn_max_age=600,
+        ssl_require=True,
+    )
 # --------------------------------------------------------------------
 # Custom User Model
 # --------------------------------------------------------------------
-AUTH_USER_MODEL = "users.User"
-
+if os.environ.get("DATABASE_URL"):
+    DATABASES["default"] = dj_database_url.parse(
+        os.environ["DATABASE_URL"],
+        conn_max_age=600,
+        ssl_require=True,
+    )
 # --------------------------------------------------------------------
 # Password Validators
 # --------------------------------------------------------------------
